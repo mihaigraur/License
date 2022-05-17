@@ -8,14 +8,14 @@
         <div>
             <form th:action="@{/logout}" method="post">
                 <p>
-                    Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>
+                    Welcome <b>[[${#request.userPrincipal.principal.fullName}]]</b>   
+                     <!-- fullName trebuie sa fie denumirea geterului din CreateUserDetails, ca acolo am implementat metoda de getFullName() -->
                 </p>
                 <input type="submit" value="Log out"/>
             </form>
         </div>
         <div>
-            <h1>List of users</h1>
-            <h2>OKKKK</h2>
+            <h1>Dashboard</h1>
         </div>
 
     </div>
