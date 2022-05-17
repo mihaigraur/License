@@ -1,8 +1,5 @@
 package com.license.license;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,12 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter{ 
+    //mostenim clasa asta ca sa avem la dispozitie comportamentul deafult al spring security
 
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean
+    @Bean  //folosind Bean ne folosim de crearea automata a instanteiprin autowired ca sa ajungem la clasa CreateUserDetailsService
     public UserDetailsService userDetailsService(){
         return new CreateUserDetailsService();
     }
@@ -33,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService((userDetailsService()));
+        authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(cryptoPasswordEncoder());
 
         return authenticationProvider;
@@ -46,18 +41,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/list_of_users").authenticated()
+        http.authorizeRequests().antMatchers("/dashboard").authenticated()  //se pune asta ca sa protejeze /dashboard ca numai atunci cand utilizatorul este autentifica sa poata accesa pagina respectiva
             .anyRequest().permitAll()
             .and()
             .formLogin()
                 .usernameParameter("email")
-                .defaultSuccessUrl("/list_of_users")
+                .defaultSuccessUrl("/dashboard")
                 .permitAll()
+            .loginPage("/login")    //practic am suprascris form ul de logn predefinit in unul custom 
+            .permitAll()
             .and()
-            .logout().logoutSuccessUrl("/").permitAll();
+            .logout().logoutSuccessUrl("/").permitAll();   //ala "/" te duce pe pagina index, principala
     }
 
-    
-    
-    
+
 }
