@@ -1,8 +1,18 @@
 <html xmlns:th="https://www.thymeleaf.org">
+    
 <head>
     <title>Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{assets/password-strength-meter/password.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.11.2/css/all.css} "/>
+
+    <script type="text/javascript" th:src="@{/javascript/formActions.js}"></script>
+    <link th:rel="stylesheet" th:href="@{/css/style.css}"/>
+    
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 <body>
     <div class="container text-center">
@@ -10,48 +20,71 @@
             <h1>Welcome to register</h1><br>
         </div>
         
-        <form th:action="@{/process_register}" th:object="${user}" method="post" style="max-width: 600px; margin: 0 auto;" onsubmit="return validate()">
+        <form th:action="@{/register}" id="form" name="form" th:object="${user}" method="post" style="max-width: 600px; margin: 0 auto;" onsubmit="return validate()">
             
             <div class="m-3">
                 <div class="form-group row">
-                    <label class="col-form-label col-4">First Name:</label>
+                    <label for="firstName" class="col-form-label col-4">First Name:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" th:field="*{firstName}" required minlength="3" maxlength="10" />
+                        <input type="text" id="firstName" placeholder="Enter your first name..." class="form-control" th:field="*{firstName}" onkeyup="this.setCustomValidity('')" />
                     </div>
                 </div><br>
 
                 <div class="form-group row">
                     <label class="col-form-label col-4">Last Name:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" th:field="*{lastName}" required minlength="3" maxlength="10" />
+                        <input type="text" placeholder="Enter your last name..." id="lastName" class="form-control" th:field="*{lastName}" onkeyup="this.setCustomValidity('')" />
                     </div>
                 </div><br> 
 
                 <div class="form-group row">
                     <label class="col-form-label col-4">Phone:</label>
                     <div class="col-8">
-                        <input type="text" class="form-control" th:field="*{phone}" required minlength="8" maxlength="16"/>
+                        <input type="text" class="form-control" id="phone" placeholder="07..." th:field="*{phone}" onkeyup="this.setCustomValidity('')" />
                     </div>
                 </div><br>
 
                 <div class="form-group row">
                     <label class="col-form-label col-4">Email:</label>
                     <div class="col-8">
-                        <input type="email" class="form-control" th:field="*{email}" required minlength="6" />
+                        <input type="email" class="form-control" id="email" placeholder="email@email.com" th:field="*{email}" onkeyup="this.setCustomValidity('')" />
                     </div>
                 </div><br>
 
                 <div class="form-group row">
-                    <label class="col-form-label col-4">Password:</label>
+                    <label for="password" class="col-form-label col-4">Password:</label>
                     <div class="col-8">
-                        <input type="password" class="form-control" th:field="*{password}" required />
+                        <input type="password" class="form-control" name="password" th:errorClass="is-invalid" id="password" onpaste="return false;" placeholder="Enter your password..." th:field="*{password}" oninput="return passwordValidation();">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></div>
+                        <span class="eye">
+                                <i class="bi bi-eye-slash" id="passwordVisibility"></i>
+                            </span>
+                        </input>
+                        <div id="progressBarPassword">
+                            <p><span id="result"></span></p>
+                            <div class="progress">
+                                <div id="passwordStrength" class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div><br>
+                            </div>
+                        </div>
+                        <ul id="ul">
+                            <li id="up">At least 1 uppercase</li>
+                            <li id="low">At least 1 lowercase</li>
+                            <li id="special">At least 1 special character</li>
+                            <li id="number">At least 1 number</li>
+                            <li id="length">At least 8 characters</li>
+                        </ul>
                     </div>
                 </div><br>
 
                 <div class="form-group row">
                     <label class="col-form-label col-4">Confirm password:</label>
                     <div class="col-8">
-                        <input type="password" class="form-control" th:field="*{confirmPassword}" required />
+                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" onpaste="return false;" placeholder="Retype your password..." th:field="*{confirmPassword}" oninput="return passwordValidation();" >  
+                            <span class="eye">
+                                <i class='bi bi-eye-slash' id="confirmPasswordVisibility"></i>
+                            </span>
+                        </input>
+                        <div id="error" class="alert alert-danger hide" role="alert"></div>
                     </div>
                 </div><br>
 
@@ -59,22 +92,218 @@
                     <div class="g-recaptcha" th:data-sitekey="6LcS4-sfAAAAABuWtQ5I3gO_Hi3ZU0Kb97cNjv45"></div>
                 </div><br>
 
-                    <button type="submit" class="btn btn-primary">Register</button><br><br>
+                    <button type="submit" id="submit" name="submit" class="btn btn-primary" onclick="inputValidations()">Register</button><br><br>
                     <a th:href="@{/login}">Already have an account?</a>
             </div>
         </form>
     </div>
 
-    <script type="text/javascript">
-        function validate(){
-            if(grecaptcha.getResponse()){
+    <script>
+        //visibility eye icon
+        let password = document.getElementById('password');
+        let passwordVisibility = document.getElementById('passwordVisibility');
+        let confirmPassword = document.getElementById('confirmPassword');
+        let confirmPasswordVisibility = document.getElementById('confirmPasswordVisibility');
+
+        //passwords progressbar
+        let passwordProgress = document.getElementById('password');
+        let passwordStrength = document.getElementById('passwordStrength');
+
+        //password validations
+        let up = document.getElementById('up');
+        let low = document.getElementById('low');
+        let special = document.getElementById('special');
+        let number = document.getElementById('number');
+        let length = document.getElementById('length');
+
+        let form = document.getElementById('form');
+        let firstName = document.getElementById('firstName');
+        let lastName = document.getElementById('lastName');
+        let phone = document.getElementById('phone');
+        let email = document.getElementById('email');
+  
+        passwordVisibility.addEventListener('click', function(pass) {
+            const typePassword = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', typePassword);
+            this.classList.toggle('bi-eye');
+        });
+  
+        confirmPasswordVisibility.addEventListener('click', function(conf) {
+            const typeConfirmPass = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPassword.setAttribute('type', typeConfirmPass);
+            this.classList.toggle('bi-eye');
+        });
+
+        passwordProgress.addEventListener('keyup', function(){
+            let pass = passwordProgress.value;
+            passwordStrengthChecker(pass);
+        })
+
+        function passwordStrengthChecker(passwordProgress){
+            let strength = 0;
+
+            if(passwordProgress.match(/([A-Z])/)){
+                strength++;
+                up.style.color = 'green';
+            }else{
+                up.style.color = 'red';
+            }
+
+            if(passwordProgress.match(/([a-z])/)){
+                strength++;
+                low.style.color = 'green';
+            }else{
+                low.style.color = 'red';
+            }
+
+            if(passwordProgress.match(/([0-9])/)){
+                strength++;
+                number.style.color = 'green';
+            }else{
+                number.style.color = 'red';
+            }
+
+            if(passwordProgress.match(/([!,@,#,$,%,^,&,*,~,_,?,.,-,+,=,<,>,(,)])/)){
+                strength++;
+                special.style.color = 'green';
+            }else{
+                special.style.color = 'red';
+            }
+
+            if(passwordProgress.length > 7){
+                strength++;
+                length.style.color = 'green';
+            }else{
+                length.style.color = 'red';
+            }
+
+            if(strength == 0){
+                passwordStrength.style = 'width: 0%';
+            }else if(strength == 1){
+                passwordStrength.classList.add('progress-bar-weak');
+                passwordStrength.classList.remove('progress-bar-medium');
+                passwordStrength.classList.remove('progress-bar-strong');
+                passwordStrength.classList.remove('progress-bar-mediumv2');
+                passwordStrength.style = 'width: 20%';
+            }else if(strength == 2){
+                passwordStrength.classList.add('progress-bar-weak');
+                passwordStrength.classList.remove('progress-bar-medium');
+                passwordStrength.classList.remove('progress-bar-strong');
+                passwordStrength.classList.remove('progress-bar-mediumv2');
+                passwordStrength.style = 'width: 40%';
+            }else if(strength == 3){
+                passwordStrength.classList.add('progress-bar-medium');
+                passwordStrength.classList.remove('progress-bar-weak');
+                passwordStrength.classList.remove('progress-bar-strong');
+                passwordStrength.classList.remove('progress-bar-mediumv2');
+                passwordStrength.style = 'width: 60%';
+            }else if(strength == 4){
+                passwordStrength.classList.add('progress-bar-mediumv2');
+                passwordStrength.classList.remove('progress-bar-weak');
+                passwordStrength.classList.remove('progress-bar-strong');
+                passwordStrength.classList.remove('progress-bar-medium');
+                passwordStrength.style = 'width: 80%';
+            }else if(strength == 5){
+                passwordStrength.classList.add('progress-bar-strong');
+                passwordStrength.classList.remove('progress-bar-weak');
+                passwordStrength.classList.remove('progress-bar-medium');
+                passwordStrength.classList.remove('progress-bar-mediumv2');
+                passwordStrength.style = 'width: 100%';
+            }
+        }
+
+        function inputValidations(){
+            //trim() removes all the whitespaces, de exemplu daca da space space space de mai multe ori sa nu se ia in considerare
+            let firstNameValue = firstName.value.trim();
+            let lastNameValue = lastName.value.trim();
+            let phoneValue = phone.value.trim();
+            let emailValue = email.value.trim();
+            let passwordValue = password.value.trim();
+            let confirmPasswordValue = confirmPassword.value.trim();
+
+            if(firstNameValue === ""){
+                firstName.setCustomValidity('First Name cannot be empty!');
+            }else if(!validNameLength(firstNameValue)){
+                firstName.setCustomValidity('Please enter at least 1 uppercase and 1 lowercase. The length must be between 3-15 characters.');
+            }
+
+            if(lastNameValue === ""){
+                lastName.setCustomValidity('Last Name cannot be empty!');
+            }else if(!validNameLength(lastNameValue)){
+                lastName.setCustomValidity('Please enter at least 1 uppercase and 1 lowercase. The length must be between 3-15 characters.');
+            }
+
+            if(phoneValue === ""){
+                phone.setCustomValidity('Phone cannot be empty!');
+            }else if(!validPhoneNumber(phoneValue)){
+                phone.setCustomValidity('This is not a valid number');
+            }
+
+            if(emailValue === ""){
+                email.setCustomValidity('Email cannot be empty!');
+            }else if(!validEmail(emailValue)){
+                email.setCustomValidity('Email is not valid!');
+            }
+
+            if(passwordValue === ""){
+                password.setCustomValidity('Password cannot be empty!');
+            }
+            
+            if(confirmPasswordValue === ""){
+                confirmPassword.setCustomValidity('Confirm password cannot be empty!');
+            }
+
+            let message = [];
+            const errorMessage = document.getElementById('error');
+
+            if(passwordValue !== "" && confirmPasswordValue !== "" && passwordValue === confirmPasswordValue){
+                if(!validMeterPassword(passwordValue)){
+                    errorMessage.style = 'display: block';
+                    message.push("Your password must have at least 8 characters, 1 lowercase, 1 uppercase,  1 number and 1 special character");
+                }else{
+                    errorMessage.style = 'display: none';
+                    message.push("");
+                }
+                if(message.length > 0){
+                    errorMessage.innerText = message.join(', ');
+                }
+            }
+        }
+
+        function validEmail(email){
+            if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
                 return true;
             }else{
-                alert("Please approve that you are not a robot!");
                 return false;
             }
         }
+
+        function validMeterPassword(password){
+            if(/^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[!,@,#,$,%,^,&,*,~,_,?,.,-,+,=,<,>,(,)])(?=.*[0-9]).*$/.test(password)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        function validPhoneNumber(phone){
+            if(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(phone)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        function validNameLength(name){
+            if(/^(?=.{3,15})(?=.*[a-z])(?=.*[A-Z]).*$/.test(name)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        password.addEventListener('paste', e => e.preventDefault());
     </script>
-    
+
 </body>
 </html>

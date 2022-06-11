@@ -15,23 +15,27 @@ public class User {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(name= "firstName", nullable = false, length = 255)
     private String firstName;
 
-    @Column(nullable = false, length = 255)
+    @Column(name= "lastName", nullable = false, length = 255)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 20)   //intrebare: cum se face sa mi afiseze un mesaj de eroare nu sa dea crash aplicatia
+    @Column(name= "phone", nullable = false, length = 20)   //intrebare: cum se face sa mi afiseze un mesaj de eroare nu sa dea crash aplicatia
     private String phone;
 
-    @Column(nullable = false, length = 64)
+    @Column(name= "password", nullable = false, length = 64)
     private String password;
     
-    @Column(nullable = false, length = 64)
+    //@Pattern(regexp = "^((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*]))", message = "Password must contain atleast 1 uppercase, 1 lowercase, 1 digit and 1 special character")
+    @Column(name= "confirmPassword", nullable = false, length = 64)
     private String confirmPassword;
+
+    public User(){
+    }
 
     public Long getId() {
         return id;
@@ -82,4 +86,9 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
+    @Override
+    public String toString() {
+        return "User [confirmPassword=" + confirmPassword + ", email=" + email + ", firstName=" + firstName + ", id="
+                + id + ", lastName=" + lastName + ", password=" + password + ", phone=" + phone + "]";
+    }
 }

@@ -1,0 +1,50 @@
+.eye i{
+    position: absolute;
+    margin-left: 160px;
+    margin-top: -27px;
+    cursor: pointer;
+}
+
+.progress{
+    height: 10px;
+}
+
+.form-group{
+    margin-bottom: 10px;
+}
+
+.progress-bar-weak{
+    background-color: red;
+}
+
+.progress-bar-medium{
+    background-color: orange;
+}
+
+.progress-bar-mediumv2{
+    background-color: #C8DF52;
+}
+
+.progress-bar-strong{
+    background-color: green;
+}
+
+ul {
+    list-style-type: none;
+    width: 100%;
+    padding: 5%;
+    background: #F1F2F3;
+    border-radius: 5%;
+    margin-top: 5%;
+    margin-bottom: -5%;
+    display: none;
+}
+
+.hide{
+    display: none;
+}
+
+.invalid-feedback{
+    font-weight: 600;
+    text-align: left;
+}
