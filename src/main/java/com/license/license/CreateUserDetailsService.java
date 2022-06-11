@@ -17,5 +17,5 @@ public class CreateUserDetailsService implements UserDetailsService{
             throw new UsernameNotFoundException("User not found!");
         }
         return new CreateUserDetails(user);
-    }
+    } 
 }

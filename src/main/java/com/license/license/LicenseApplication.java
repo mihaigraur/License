@@ -17,4 +17,9 @@ public class LicenseApplication {
 		return new RestTemplate();
 	}
 
+	// @Bean
+	// public PasswordEncoder passwordEncoder(){
+	// 	return new BCryptPasswordEncoder();
+	// }
+
 }
