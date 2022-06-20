@@ -18,7 +18,7 @@ function passwordValidation(){
         confirmPassword.setCustomValidity('Passwords don t match!');
     }else{
         document.getElementById('ul').style.display = 'none';
-        confirmPassword.setCustomValidity("");
-        password.setCustomValidity("");
+        confirmPassword.setCustomValidity('');
+        password.setCustomValidity('');
     }
 }
