@@ -2,6 +2,8 @@ package com.license.license;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +15,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private Integer id;
 
+    // @NotEmpty(message = "First name cannot be empty")
     @Column(name= "firstName", nullable = false, length = 255)
     private String firstName;
 
@@ -24,23 +27,31 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Column(name= "phone", nullable = false, length = 20)   //intrebare: cum se face sa mi afiseze un mesaj de eroare nu sa dea crash aplicatia
+    @Column(name= "phone", nullable = false, length = 20) 
     private String phone;
 
     @Column(name= "password", nullable = false, length = 64)
     private String password;
     
-    //@Pattern(regexp = "^((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*]))", message = "Password must contain atleast 1 uppercase, 1 lowercase, 1 digit and 1 special character")
     @Column(name= "confirmPassword", nullable = false, length = 64)
     private String confirmPassword;
+
+    private boolean enabledUser;
+
+    @Column(name = "verificationCode", nullable = false, length = 64)
+    private String verificationCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_producer")
+    private AuthenticationProducer authenticationProducer;
 
     public User(){
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -84,6 +95,30 @@ public class User {
     }
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public boolean isEnabledUser() {
+        return enabledUser;
+    }
+
+    public void setEnabledUser(boolean enabledUser) {
+        this.enabledUser = enabledUser;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public AuthenticationProducer getAuthenticationProducer() {
+        return authenticationProducer;
+    }
+
+    public void setAuthenticationProducer(AuthenticationProducer authenticationProducer) {
+        this.authenticationProducer = authenticationProducer;
     }
 
     @Override

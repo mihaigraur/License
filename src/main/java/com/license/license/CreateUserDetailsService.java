@@ -18,4 +18,19 @@ public class CreateUserDetailsService implements UserDetailsService{
         }
         return new CreateUserDetails(user);
     } 
+
+    // public User getUserByEmail(String email){
+    //     User user = repository.findByEmail(email);
+    //     if(user == null){
+    //         throw new UsernameNotFoundException("User not found!");
+    //     }
+    //     return new User();
+    // }
+
+    // public CreateUserDetailsService() {
+    // }
+
+    // public CreateUserDetailsService(UserRepository repository) {
+    //     this.repository = repository;
+    // }
 }

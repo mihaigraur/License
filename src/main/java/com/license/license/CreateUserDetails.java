@@ -44,11 +44,10 @@ public class CreateUserDetails implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabledUser();
     }
 
     public String getFullName(){
         return user.getFirstName() + " " + user.getLastName();
     }
-    
 }

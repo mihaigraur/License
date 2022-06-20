@@ -1,5 +1,6 @@
 package com.license.license;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,7 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/dashboard").authenticated()  //se pune asta ca sa protejeze /dashboard ca numai atunci cand utilizatorul este autentifica sa poata accesa pagina respectiva
+        http.authorizeRequests().antMatchers("/oauth2/**").permitAll()
+            .antMatchers("/dashboard").authenticated()  //se pune asta ca sa protejeze /dashboard ca numai atunci cand utilizatorul este autentifica sa poata accesa pagina respectiva
             .anyRequest().permitAll()
             .and()
             .formLogin()
@@ -51,8 +53,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
             .loginPage("/login")    //practic am suprascris form ul de logn predefinit in unul custom 
             .permitAll()
             .and()
+            .oauth2Login().loginPage("/login").userInfoEndpoint().userService(oAuth2UserService).and()
+            // .successHandler(successLoginOAuth2)
+            .and()
             .logout().logoutSuccessUrl("/").permitAll();   //ala "/" te duce pe pagina index, principala
     }
 
+    @Autowired
+    private GoogleOAuth2UserService oAuth2UserService;
 
 }
