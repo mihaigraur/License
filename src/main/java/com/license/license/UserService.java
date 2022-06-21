@@ -1,6 +1,7 @@
 package com.license.license;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -64,13 +65,7 @@ public class UserService {
         }
     }
 
-    // public void processDatabaseAfterOAuth2(String email, String firstName, AuthenticationProducer authenticationProducer){
-    //     User user = new User();
-    //     user.setEmail(email);
-    //     user.setFirstName(firstName);
-    //     user.setEnabledUser(true);
-    //     user.setAuthenticationProducer(authenticationProducer);
-
-    //     userRepository.save(user);
-    // }
+    public List<User> listAllUsers() {
+        return userRepository.findAll();
+    }
 }
