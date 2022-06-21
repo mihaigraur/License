@@ -1,5 +1,6 @@
 package com.license.license;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "usersRegistered")
-public class User {
+public class User implements Comparable<User>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -23,8 +24,8 @@ public class User {
 
     @Column(name= "lastName", nullable = false, length = 255)
     private String lastName;
-
-    @Column(name = "email", nullable = false, length = 50)
+    
+    @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
     @Column(name= "phone", nullable = false, length = 20) 
@@ -46,6 +47,10 @@ public class User {
     private AuthenticationProducer authenticationProducer;
 
     public User(){
+    }
+
+    public User(String email) {
+        this.email = email;
     }
 
     public Integer getId() {
@@ -126,4 +131,18 @@ public class User {
         return "User [confirmPassword=" + confirmPassword + ", email=" + email + ", firstName=" + firstName + ", id="
                 + id + ", lastName=" + lastName + ", password=" + password + ", phone=" + phone + "]";
     }
+
+    @Override
+    public int compareTo(User user) {
+        int compareEmail = this.email.compareTo(email);
+        if(compareEmail < 0){
+            return -1;
+        }
+        if(compareEmail > 0){
+            return 1;
+        }
+        return 0;
+    }
+
+
 }

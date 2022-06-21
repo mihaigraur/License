@@ -1,8 +1,6 @@
 package com.license.license;
 
-import java.io.IOException;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -25,7 +23,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.common.base.Objects;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class AppController {
@@ -82,8 +86,7 @@ public class AppController {
     }
 
     @PostMapping("/register")
-    public String doRegistration(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException{
-        
+    public String doRegistration(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws Exception{
         String gReCaptchaResponse = request.getParameter("g-recaptcha-response");
 
         if(!verifingReCaptcha(gReCaptchaResponse)){
@@ -99,22 +102,41 @@ public class AppController {
         user.setPassword(passwordEncoded);
         user.setConfirmPassword(confirmPasswordEncoded);
         
+        // try{
+        //     userService.registerUser(user);
+        //     String urlSite = URLHelper.getUrlSite(request);
+        //     userService.sendEmailToEnableAccount(user, urlSite);
+        // }catch(Exception exception){
+        //     exception.printStackTrace();
+        //     httpSession.setAttribute("ERROR", "Email already exists");
+
+        //     if(bindingResult.hasErrors()){
+        //         bindingResult.getAllErrors().stream().forEach(System.out::println);
+        //         return "register";
+        //     }
+
+        // }
+
         userService.registerUser(user);
         String urlSite = URLHelper.getUrlSite(request);
         userService.sendEmailToEnableAccount(user, urlSite);
-
-
-        HashTable hashTable = new HashTable(100);
-        hashTable.insert(user.getId(), user.getEmail());
-        Boolean statusEmail = hashTable.search(user.getId(), user.getEmail());
         
-        if(statusEmail){
-            userRepository.save(user);
-            return "login";
-        }else{
-            return "register";
-        }
-        
+        userRepository.save(user);
+        return "login";
+
+        // try{
+        //     userService.registerUser(user);
+        //     String urlSite = URLHelper.getUrlSite(request);
+        //     userService.sendEmailToEnableAccount(user, urlSite);
+        //     return "login";
+        // }catch(Exception e){
+        //     if(bindingResult.hasErrors()){
+        //         bindingResult.getAllErrors().stream().forEach(System.out::println);
+        //         e.printStackTrace();
+        //         httpSession.setAttribute("ERROR", "Email already exist");
+        //         // response.sendRedirect("register");
+        //     }
+        // }
     }
 
     @GetMapping("/login")
@@ -131,8 +153,16 @@ public class AppController {
         return "login";
     }
 
-    @GetMapping("/dashboard")
+    @RequestMapping("/dashboard")
     public String userList(Model model){
+        List<User> userList;
+        userList = userService.listAllUsers(); //bubble sort
+
+        BubbleSort bubbleSort = new BubbleSort();
+        bubbleSort.bubbleSort(userList);
+
+        model.addAttribute("userList", userList);
+        
         return "dashboard";
     }
 
@@ -184,5 +214,9 @@ public class AppController {
             return false;
         }
         return authentication.isAuthenticated();
+    }
+
+    public void bubbleSort(List<User> userList){
+        
     }
 }
