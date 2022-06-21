@@ -25,7 +25,7 @@ public class User implements Comparable<User>{
     @Column(name= "lastName", nullable = false, length = 255)
     private String lastName;
     
-    @Column(name = "email", nullable = false, unique = true, length = 50)
+    @Column(name = "email", nullable = false, unique = false, length = 50)
     private String email;
 
     @Column(name= "phone", nullable = false, length = 20) 

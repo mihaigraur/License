@@ -68,14 +68,4 @@ public class UserService {
     public List<User> listAllUsers() {
         return userRepository.findAll();
     }
-
-    // public void processDatabaseAfterOAuth2(String email, String firstName, AuthenticationProducer authenticationProducer){
-    //     User user = new User();
-    //     user.setEmail(email);
-    //     user.setFirstName(firstName);
-    //     user.setEnabledUser(true);
-    //     user.setAuthenticationProducer(authenticationProducer);
-
-    //     userRepository.save(user);
-    // }
 }

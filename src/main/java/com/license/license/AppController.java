@@ -23,12 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
-
-import com.google.common.base.Objects;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -153,17 +148,30 @@ public class AppController {
         return "login";
     }
 
-    @RequestMapping("/dashboard")
-    public String userList(Model model){
+    @GetMapping("/dashboard")
+    public String userListMethod(Model model){
+        return "dashboard";
+    }
+
+    @GetMapping("/emails")
+    public String emails(Model model){
         List<User> userList;
-        userList = userService.listAllUsers(); //bubble sort
+        userList = userService.listAllUsers();
 
         BubbleSort bubbleSort = new BubbleSort();
         bubbleSort.bubbleSort(userList);
 
+        // BinarySearch binarySearch = new BinarySearch();
+        // int findResult = binarySearch.binarySearch(userList, key);
+        // if(findResult == -1){
+        //     return "dashboard";
+        // }else{
+        //     System.out.print("FIND RESULT " + findResult);
+        // }
+
         model.addAttribute("userList", userList);
-        
-        return "dashboard";
+
+        return "emails";
     }
 
     @GetMapping("/legit")
@@ -216,7 +224,20 @@ public class AppController {
         return authentication.isAuthenticated();
     }
 
-    public void bubbleSort(List<User> userList){
-        
-    }
+    // public static String encryptSHA1(String password) throws PrintException{
+    //     try{
+    //         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+
+    //         byte[] passwordInBytes = messageDigest.digest(password.getBytes());
+    //         BigInteger signumNumber = new BigInteger(1, passwordInBytes);
+    //         String hashPassword = signumNumber.toString(16);
+
+    //         while(hashPassword.length() < 32){
+    //             hashPassword = "0" + hashPassword;
+    //         }
+    //         return hashPassword;
+    //     }catch(Exception exception){
+    //         throw new PrintException(exception);
+    //     }
+    // }
 }

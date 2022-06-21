@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/oauth2/**").permitAll()
             .antMatchers("/dashboard").authenticated()  //se pune asta ca sa protejeze /dashboard ca numai atunci cand utilizatorul este autentifica sa poata accesa pagina respectiva
+            .antMatchers("/emails").authenticated()
             .anyRequest().permitAll()
             .and()
             .formLogin()
