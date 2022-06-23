@@ -17,12 +17,12 @@
 <body>
     <div class="container text-center">
         <div>
-            <h1>Create your new account</h1><br>
+            <h1 style="font-family: American Typewriter; margin-top: 20px;">Create your new account!</h1><br>
         </div>
         
         <form action="#" th:action="@{/register}" id="form" name="form" th:object="${user}" method="post" style="max-width: 600px; margin: 0 auto;" onsubmit="return validate()">
             
-            <div class="m-3">
+            <div class="m-3 formBox">
                 <div class="form-group row">
                     <label for="firstName" class="col-form-label col-4">First Name:</label>
                     <div class="col-8">
@@ -94,7 +94,7 @@
                     <div class="g-recaptcha" th:data-sitekey="6LcS4-sfAAAAABuWtQ5I3gO_Hi3ZU0Kb97cNjv45"></div>
                 </div><br>
 
-                    <button type="submit" id="submit" name="submit" class="btn btn-primary" onclick="inputValidations()">Register</button><br><br>
+                    <button type="submit" id="submit" name="submit" class="btn btn-primary" onclick="inputValidations()">Register</button><br><br><br>
                     <a th:href="@{/login}">Already have an account?</a>
                 </div>
             </div>
