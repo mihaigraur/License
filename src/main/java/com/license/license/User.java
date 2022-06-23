@@ -143,6 +143,4 @@ public class User implements Comparable<User>{
         }
         return 0;
     }
-
-
 }
