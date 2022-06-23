@@ -23,14 +23,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Hashtable;
 import java.util.List;
 
 @Controller
 public class AppController {
-    @Autowired
-    private UserRepository userRepository;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -81,7 +81,7 @@ public class AppController {
     }
 
     @PostMapping("/register")
-    public String doRegistration(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String doRegistration(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
         String gReCaptchaResponse = request.getParameter("g-recaptcha-response");
 
         if(!verifingReCaptcha(gReCaptchaResponse)){
@@ -96,42 +96,17 @@ public class AppController {
 
         user.setPassword(passwordEncoded);
         user.setConfirmPassword(confirmPasswordEncoded);
-        
-        // try{
-        //     userService.registerUser(user);
-        //     String urlSite = URLHelper.getUrlSite(request);
-        //     userService.sendEmailToEnableAccount(user, urlSite);
-        // }catch(Exception exception){
-        //     exception.printStackTrace();
-        //     httpSession.setAttribute("ERROR", "Email already exists");
 
-        //     if(bindingResult.hasErrors()){
-        //         bindingResult.getAllErrors().stream().forEach(System.out::println);
-        //         return "register";
-        //     }
-
-        // }
-
-        userService.registerUser(user);
-        String urlSite = URLHelper.getUrlSite(request);
-        userService.sendEmailToEnableAccount(user, urlSite);
-        
-        userRepository.save(user);
-        return "login";
-
-        // try{
-        //     userService.registerUser(user);
-        //     String urlSite = URLHelper.getUrlSite(request);
-        //     userService.sendEmailToEnableAccount(user, urlSite);
-        //     return "login";
-        // }catch(Exception e){
-        //     if(bindingResult.hasErrors()){
-        //         bindingResult.getAllErrors().stream().forEach(System.out::println);
-        //         e.printStackTrace();
-        //         httpSession.setAttribute("ERROR", "Email already exist");
-        //         // response.sendRedirect("register");
-        //     }
-        // }
+        if(userService.hashTable(999, email) == true){
+            userService.registerUser(user);
+            String urlSite = URLHelper.getUrlSite(request);
+            userService.sendEmailToEnableAccount(user, urlSite);
+            return "login";
+        }else{
+            String uniqueEmailMessage = "Email already exists.";
+            model.addAttribute("uniqueEmailMessage", uniqueEmailMessage);
+            return "register";
+        }
     }
 
     @GetMapping("/login")
@@ -154,9 +129,10 @@ public class AppController {
     }
 
     @GetMapping("/emails")
-    public String emails(Model model){
+    public String emails(@Param("key") String key, Model model){
         List<User> userList;
-        userList = userService.listAllUsers();
+        //userList = userService.listAllUsers();
+        userList = userService.findAllEmailsByURL(key);
 
         BubbleSort bubbleSort = new BubbleSort();
         bubbleSort.bubbleSort(userList);
@@ -169,6 +145,7 @@ public class AppController {
         //     System.out.print("FIND RESULT " + findResult);
         // }
 
+        model.addAttribute("key", key);
         model.addAttribute("userList", userList);
 
         return "emails";
@@ -222,6 +199,18 @@ public class AppController {
             return false;
         }
         return authentication.isAuthenticated();
+    }
+
+    public Boolean hashTable(Integer id, String email){
+        Hashtable<Integer, String> hashtable1 = new Hashtable<>(); //marimea default 11
+
+        if(hashtable1.contains(email)){
+            return false;
+        }else{
+            hashtable1.put(id, email);
+            System.out.println(hashtable1);
+            return true;
+        }
     }
 
     // public static String encryptSHA1(String password) throws PrintException{

@@ -1,6 +1,7 @@
 package com.license.license;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -16,7 +17,7 @@ import net.bytebuddy.utility.RandomString;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserServiceInterface{
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
@@ -67,5 +68,33 @@ public class UserService {
 
     public List<User> listAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Boolean hashTable(Integer id, String email){
+        List<String> emailsUser = userRepository.findEmailFromDatabase();
+        Hashtable<Integer, String> hashtable1 = new Hashtable<Integer, String>(); //marimea default 11
+
+        Integer index = 1;
+        for (String e : emailsUser){
+            hashtable1.put(index, e);
+            index++;
+        }
+       
+        if(hashtable1.contains(email)){
+            System.out.println(hashtable1);
+            return false;
+        }else{
+            hashtable1.put(id, email);
+            System.out.println(hashtable1);
+            return true;
+        }
+    }
+
+    @Override
+    public List<User> findAllEmailsByURL(String key) {
+        if(key != null){
+            return userRepository.findEmailByURL(key);
+        }
+        return userRepository.findAll(); //default method
     }
 }
