@@ -9,7 +9,7 @@
             list-style-type: none;  
             margin: 0;
             padding: 0;
-            background-color: #B22222;
+            background-color: #25344b;
         }
 
         li{
@@ -24,20 +24,12 @@
         }
 
         li a:hover{
-            background-color: #CD5C5C;
+            background-color: #1b5cb2;
+            color: white;
         }
         
         body{
-            background-color: #00BFFF;
-        }
-
-        input{
-            margin-top: 9px;
-            margin-right: 10px;
-            margin-left: 20px;
-            background-color: #412d2d61;
-            color: white;
-            border: none;
+            background-color: #B6D0E2;
         }
 
         .center{
@@ -54,7 +46,7 @@
                     <li><a href="/dashboard">Home</a></li>
                     <li><a href="/emails">Emails</a></li>
                     <li><a href="">News</a></li>
-                    <li style="float:right">Welcome <b style="font-family: Verdana Italic;">[[${#request.userPrincipal.principal.fullName}]]</b><input type="submit" value="Log out"/></li>
+                    <li style="float:right; color: white;">Welcome <b style="font-family: Verdana Italic; color: white;">[[${#request.userPrincipal.principal.fullName}]]</b><input style="margin-top: 9px; margin-right: 10px; margin-left: 20px; border: none; color: white; background-color: black;" type="submit" value="Log out"/></li>
                 </ul> 
                      <!-- fullName trebuie sa fie denumirea geterului din CreateUserDetails, ca acolo am implementat metoda de getFullName() -->
             </form>

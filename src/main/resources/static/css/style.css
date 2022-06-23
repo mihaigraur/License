@@ -50,5 +50,13 @@ ul {
 }
 
 body{
-    background-color: #00BFFF;
+    background-color: #B6D0E2;
+}
+
+.formBox{
+    background-color: lightgray;
+    margin: 40px;
+    padding: 50px;
+    border: 5px solid white;
+    border-radius: 10px;
 }
